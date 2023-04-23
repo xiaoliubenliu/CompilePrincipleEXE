@@ -1,0 +1,4 @@
+fn begin (int a , int b)->int
+{
+   return a;
+}
