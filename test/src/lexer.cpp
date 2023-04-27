@@ -94,7 +94,7 @@ void Lexer::solveCurrLine()
 		else if (getCurrChar() == '/')
 		{
 			++_currCharPos;
-			if (!getCurrChar().has_value() && getCurrChar() == '/')
+			if (getCurrChar().has_value() && getCurrChar() == '/')
 			{
 				while (getCurrChar())//È¥³ý×¢ÊÍ
 					++_currCharPos;

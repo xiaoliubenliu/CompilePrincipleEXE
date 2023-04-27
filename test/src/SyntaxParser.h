@@ -31,6 +31,7 @@ public:
 
     SyntaxNode* solveExprList(SyntaxNode* functionNode);
 
+	inline void judgeDL();
 	SyntaxNode* parseExpr(SyntaxNode* functionNode);
 
 	SyntaxNode* parseArithORStrORBoolExpr();

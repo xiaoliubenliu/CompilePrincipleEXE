@@ -1,13 +1,12 @@
-fn add(int a,int b)->int 
+fn add(int a,int b)->int
 {
-    int c=10
-	int d=a*b
-	return a + b
+    int c=10;
+	int d=a*b;
+	return a + b;
 }
 
 fn begin(int c ,string a)-> string
 {
-	return ;
+    bool d= c|b|a;
+	return;
 }
-
-
