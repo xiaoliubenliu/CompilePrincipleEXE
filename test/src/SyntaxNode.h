@@ -2,20 +2,25 @@
 #include "Token.h"
 #include "tokenType.h"
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 #include <vector>
 using namespace std;
 
 namespace Node
 {
+	static std::ofstream outfile("output.txt",ios::app);
+
 	class SyntaxNode
 	{
 	public:
 		SyntaxNode() {}
 		virtual string toString() { return "SyntaxNode"; }
+		virtual void print(int width=0) { cout <<setw(width)<<" "<< "rootNode" << ""; }
 		virtual ~SyntaxNode() {}
 	};
 
-	class ProgramNode :public SyntaxNode //如果没有public那么将无法实现多态。
+	class ProgramNode :public SyntaxNode //如果没有public那么父类的方法会直接被private
 	{
 	public:
 		void addFunc(SyntaxNode* fun)
@@ -28,7 +33,24 @@ namespace Node
 			this->arrayvec.push_back(arr);
 		}
 
-		string toString() { return "ProgramNode"; };
+		void print(int width) override
+		{
+			cout << setw(width) << " "<< toString()<<"::" << endl;
+			cout << setw(width) <<"" << "{" << endl;
+			for (auto& item : funvec)
+			{
+				if (item != nullptr)
+					item->print(width+4);
+			}
+			for (auto& item : arrayvec)
+			{
+				if (item != nullptr)
+					item->print(width + 4);
+			}
+			cout << setw(width) << " "<<"}" << endl;
+		}
+
+		string toString() { return "Global"; };
 	private:
 		vector<SyntaxNode*> funvec;
 		vector<SyntaxNode*> arrayvec;
@@ -57,8 +79,23 @@ namespace Node
 			this->retNode = retNode;
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << " " << toString() << endl;
+			cout << setw(width) << " " << "{" << endl;
+
+			for (auto& item : paramList)
+			{
+				if (item != nullptr)
+					item->print(width + 4);
+			}
+			retNode->print(width + 4);
+			funBody->print(width + 4);
+			cout << setw(width) << " " << "}" << endl;
+		}
+
 		string toString() {
-			return "Function Node" + funName.toString() + "\n";
+			return "FunctionNode" + funName.toString();
 		}
 	};
 
@@ -71,8 +108,13 @@ namespace Node
 		ArrayDeclareNode(Token kw, Token id, long length) :kw(kw), id(id), length(length) {
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+		}
+
 		string toString() {
-			return "ArrayDeclareNode " + this->kw.toString() + " " + id.toString() + "[" + to_string(length) + "]\n";
+			return "ArrayDeclareNode " + this->kw.toString() + " " + id.toString() + "[" + to_string(length) + "]";
 		}
 	};
 
@@ -85,14 +127,14 @@ namespace Node
 		{
 		}
 
-		string toString() {
-			return "声明 " + kw.toString() + " " + id.toString() + "\n";
+		void print(int width) override
+		{
+			cout << setw(width) << "" <<toString() << endl;
 		}
-	};
 
-	class CodeBlockNode :public SyntaxNode
-	{
-
+		string toString() {
+			return "DeclareNode " + kw.toString() + " " + id.toString();
+		}
 	};
 
 	class ExprListNode :public SyntaxNode
@@ -109,17 +151,41 @@ namespace Node
 			exprVec.push_back(node);
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width)<<"" << toString() << endl;
+			cout << setw(width)<<"" << "{" << endl;
+			for (auto& item : exprVec)
+			{
+				if (item != nullptr)
+				{
+					item->print(width+4);
+				}
+			}
+			cout << setw(width) << "" << "}" << endl;
+		}
+
 		string toString() {
-			return "ExprListNode " + to_string(exprVec.size()) + "\n";
+			return "ExprListNode ";
 		}
 	};
 
 	class retNode :public SyntaxNode
 	{
-		ETokenType _retType;
+		Token _retType;
 	public:
-		retNode(ETokenType rettype) :_retType(rettype)
+		retNode(Token retType) :_retType(retType)
 		{
+		}
+
+		void print(int width) override
+		{
+			cout << setw(width) << " " <<"return:" << toString() << endl;
+		}
+
+		string toString() override
+		{
+			return _retType.toString();
 		}
 	};
 
@@ -132,8 +198,17 @@ namespace Node
 		{
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+			cout << setw(width) << "{" << endl;
+			if (expr != nullptr)
+				expr->print(width+4);
+			cout << setw(width) << "}" << endl;
+		}
+
 		string toString() {
-			return "ReturnNode " + t.toString() + "\n";
+			return "ReturnNode " + t.toString() ;
 		}
 	};
 
@@ -143,12 +218,23 @@ namespace Node
 		SyntaxNode* left;
 		SyntaxNode* right;
 	public:
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+			cout << setw(width) << "{" << endl;
+			if (left != nullptr)
+				left->print(width + 4);
+			if (right != nullptr)
+				right->print(width + 4);
+			cout << setw(width) << "}" << endl;
+		}
+
 		BinaryOPNode(SyntaxNode* left, Token t, SyntaxNode* right) :left(left), right(right), t(t)
 		{
 		}
 
 		string toString() {
-			return "BinaryOPNode " + left->toString() + t.toString() + right->toString() + "\n";
+			return "BinaryOPNode " + left->toString() + t.toString() + right->toString();
 		}
 	};
 
@@ -160,8 +246,13 @@ namespace Node
 		{
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+		}
+
 		string toString() {
-			return "StringNode " + t.toString() + "\n";
+			return "StringNode " + t.toString() ;
 		}
 	};
 
@@ -173,8 +264,12 @@ namespace Node
 		 {
 		 }
 
+		 void print(int width) override
+		 {
+			 cout << setw(width) << "" << toString() << endl;
+		 }
 		 string toString() {
-			return "BoolNode " + t.toString() + "\n";
+			return "BoolNode " + t.toString() ;
 		 }
 	};
 
@@ -186,8 +281,12 @@ namespace Node
 		{
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+		}
 		string toString() {
-			return "NumberNode " + t.toString() + "\n";
+			return "NumberNode " + t.toString() ;
 		}
 	};
 
@@ -198,8 +297,12 @@ namespace Node
 		 ContinueNode(Token t):t(t) {
 		}
 
+		 void print(int width) override
+		 {
+			 cout << setw(width) << "" << toString() << endl;
+		 }
 		string toString() {
-			return "ContinueNode " + t.toString() + "\n";
+			return "ContinueNode " + t.toString() ;
 		}
 	};
 
@@ -210,8 +313,12 @@ namespace Node
 		{
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+		}
 		string toString() {
-			return "BreakNode " + t.toString() + "\n";
+			return "BreakNode " + t.toString() ;
 		}
 	};
 
@@ -225,8 +332,16 @@ namespace Node
 			whileExpr = whileExpr;
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+			cout << setw(width) << "" << "{" << endl;
+			logicExpr->print(width + 4);
+			whileExpr->print(width + 4);
+			cout << setw(width) << "" << "}" << endl;
+		}
 		string toString() {
-			return "whileNode \n";
+			return "whileNode ";
 		}
 	};
 
@@ -244,8 +359,18 @@ namespace Node
 		{
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+			cout << setw(width) << "" << "{" << endl;
+			logicExpr->print(width + 4);
+			ifExpr->print(width + 4);
+			elseExpr->print(width + 4);
+			cout << setw(width) << "" << "}" << endl;
+		}
+
 		string toString() {
-			return "IfElseNode " + ifToken.toString() + "\n";
+			return "IfElseNode " + ifToken.toString() ;
 		}
 	};
 
@@ -256,8 +381,15 @@ namespace Node
 			exprForPrint = exprForPrint;
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+			cout << setw(width) << "" << "{" << endl;
+			exprForPrint->print(width+4);
+			cout << setw(width) << "" << "}" << endl;
+		}
 		string toString() {
-			return "打印 " + exprForPrint->toString() + "\n";
+			return "打印 " + exprForPrint->toString() ;
 		}
 	};
 
@@ -269,8 +401,16 @@ namespace Node
 		{
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+			cout << setw(width) << "" << "{" << endl;
+			left->print(width + 4);
+			right->print(width + 4);
+			cout << setw(width) << "" << "}" << endl;
+		}
 		string toString() {
-			return "AssignNode " + left->toString() + "=" + right->toString() + "\n";
+			return "AssignNode " + left->toString() + "=" + right->toString() ;
 		}
 	};
 
@@ -281,8 +421,12 @@ namespace Node
 		VariableNode(Token t) :id(t) {
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+		}
 		string toString() {
-			return "VariableNode " + id.toString() + "\n";
+			return "VariableNode " + id.toString() ;
 		}
 	};
 
@@ -297,8 +441,16 @@ namespace Node
 		{
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+			cout << setw(width) << "" << "{" << endl;
+			index->print(width + 4);
+			value->print(width + 4);
+			cout << setw(width) << "" << "}" << endl;
+		}
 		string toString() {
-			return "ArrayAssignNode " + id.toString() + "\n";
+			return "ArrayAssignNode " + id.toString() ;
 		}
 	};
 
@@ -313,8 +465,19 @@ namespace Node
 			params.push_back(param);
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+			cout << setw(width) << "" << "{" << endl;
+			for (auto& item : params)
+			{
+				if (item != nullptr)
+					item->print(width + 4);
+			}
+			cout << setw(width) << "" << "}" << endl;
+		}
 		string toString() {
-			return "CallNode " + funName.toString() + " " + "\n";
+			return "CallNode " + funName.toString() + " " ;
 		}
 	};
 
@@ -326,9 +489,20 @@ namespace Node
 		}
 
 		string toString() {
-			return "DeclareMULNode 声明 " + kw.toString() + "\n";
+			return "DeclareMULNode " + kw.toString() ;
 		}
 
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+			cout << setw(width) << "" << "{" << endl;
+			for (auto& item : assignList)
+			{
+				if (item != nullptr)
+					item->print(width + 4);
+			}
+			cout << setw(width) << "" << "}" << endl;
+		}
 		void add(SyntaxNode* node)
 		{
 			assignList.push_back(node);
@@ -342,8 +516,14 @@ namespace Node
 		ArrayValueNode(Token id, SyntaxNode* index) :id(id), index(index) {
 		}
 
+
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+			index->print(width + 4);
+		}
 		string toString() {
-			return "ArrayValueNode " + id.toString() + "\n";
+			return "ArrayValueNode " + id.toString() ;
 		}
 	};
 
@@ -351,6 +531,15 @@ namespace Node
 		ReadNodeType rnt;
 	public:
 		ReadNode(ReadNodeType rnt) :rnt(rnt) {
+		}
+
+		void print(int width) override
+		{
+			cout << setw(width) << "" << toString() << endl;
+		}
+		string toString()override
+		{
+			return "ReadNodeType";
 		}
 	};
 
@@ -364,7 +553,7 @@ namespace Node
 
 		string toString() 
 		{
-			return "UnaryOPNode " + t.toString() + "\n";
+			return "UnaryOPNode " + t.toString() ;
 		}
 	};
 }

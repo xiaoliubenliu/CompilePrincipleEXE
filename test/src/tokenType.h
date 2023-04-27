@@ -38,7 +38,7 @@ static enum ETokenType {
 	_RTVALUE,
 
 	_VOID,
-	_RETURN,
+	_RETURN, //包括-> 和 return关键字
 	_CONTINUE,
 	_ASSIGN, //赋值
 	_PRINT,  //内置打印语句

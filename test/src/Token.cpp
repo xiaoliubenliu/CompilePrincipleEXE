@@ -5,11 +5,11 @@ string Token::toString() const
 {
 	if (_value)
 	{
-		return (to_string(this->_line) + "行," + to_string(this->_col) + "列:" + token_names[(int)_type] +_value.value() + "\n");
+		return (/*to_string(this->_line) + "行," + to_string(this->_col) + "列:"*/ string() + token_names[(int)_type] + "->" + _value.value());
 	}
 	else
 	{
-		return  (to_string(this->_line) + "行," + to_string(this->_col) + "列:" + token_names[(int)_type] + "\n");
+		return  (/*to_string(this->_line) + "行," + to_string(this->_col) + "列:"*/string() + token_names[(int)_type]);
 	}
 }
 

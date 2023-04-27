@@ -17,6 +17,8 @@ public:
 	string toString() const;
 	string TokenName() const;
 	ETokenType type() { return _type; }
+	int getLine() { return _line; }
+	int getCol() { return _col; }
 	optional<string> value() { return _value; }
 private:
 	ETokenType _type;

@@ -34,7 +34,7 @@ bool TextLoader::LoadFromString(string code , vector<string>& str)
 {
 	stringstream ss(code);
 	string temp;
-	while (getline(ss,temp))
+	while (getline(ss,temp,'\n'))
 	{
 		str.push_back(temp);
 	}

@@ -1,4 +1,13 @@
-fn begin (int a , int b)->int
+fn add(int a,int b)->int 
 {
-   return a;
+    int c=10
+	int d=a*b
+	return a + b
 }
+
+fn begin(int c ,string a)-> string
+{
+	return ;
+}
+
+

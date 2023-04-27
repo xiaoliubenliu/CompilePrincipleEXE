@@ -2,6 +2,7 @@
 #include "TokenType.h"
 #include "Token.h"
 #include "SyntaxNode.h"
+#include <fstream>
 #include "tokenType.h"
 #include <vector>
 #include <iostream>

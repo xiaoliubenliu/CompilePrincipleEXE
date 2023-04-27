@@ -135,6 +135,7 @@
     <ClCompile Include="src\Error.cpp" />
     <ClCompile Include="src\lexer.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\SyntaxParser.cpp" />
     <ClCompile Include="src\TextLoader.cpp" />
     <ClCompile Include="src\Token.cpp" />
     <ClCompile Include="src\tokenType.cpp" />
@@ -146,10 +147,9 @@
     <ClInclude Include="src\SyntaxParser.h" />
     <ClInclude Include="src\TextLoader.h" />
     <ClInclude Include="src\Token.h" />
-    <ClInclude Include="src\tokenType.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\SyntaxParser.cpp" />
+    <Text Include="src\Tokenlist.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

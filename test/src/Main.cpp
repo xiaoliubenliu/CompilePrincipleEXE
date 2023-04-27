@@ -1,6 +1,7 @@
 #include "lexer.h"
 #include <iostream>
 #include <fstream>
+#include "SyntaxNode.h"
 #include <sstream>
 #include "SyntaxParser.h"
 
@@ -17,7 +18,7 @@ int main()
 	string code;
 	if (file.is_open()) {
 		while (getline(file,str)) {
-			code += str;
+			code += str+'\n';
 		}
 		file.close();
 	}
@@ -25,10 +26,18 @@ int main()
 	{
 		cout << "file open filed" << endl;
 	}
-	auto ret= Parse(code.c_str());
+
+	vector<Token> ret= Parse(code.c_str());
 	for (auto& item : ret)
 	{
 		cout << item.TokenName() << "  ";
 	}
+
+	SyntaxParser s1(ret);
+
+
+	SyntaxNode* rootnode = s1.BeginParse();
+	cout << "\n________________________" << endl;
+	rootnode->print(0);
 }
 

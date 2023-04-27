@@ -29,6 +29,9 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\SyntaxParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Error.h">
@@ -43,9 +46,6 @@
     <ClInclude Include="src\Token.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\tokenType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\SyntaxParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -54,6 +54,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\SyntaxParser.cpp" />
+    <Text Include="src\Tokenlist.txt" />
   </ItemGroup>
 </Project>
