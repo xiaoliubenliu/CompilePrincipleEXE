@@ -10,7 +10,7 @@ using namespace Node;
 
 class SyntaxParser
 {
-
+	inline void judgeDL();
 public:
 	SyntaxParser(std::vector<Token>& tokens) :_tokens(tokens), _tokenIndex(-1) 
 	{
@@ -31,7 +31,6 @@ public:
 
     SyntaxNode* solveExprList(SyntaxNode* functionNode);
 
-	inline void judgeDL();
 	SyntaxNode* parseExpr(SyntaxNode* functionNode);
 
 	SyntaxNode* parseArithORStrORBoolExpr();

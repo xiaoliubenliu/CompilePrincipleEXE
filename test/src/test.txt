@@ -1,4 +1,4 @@
-fn add(int a,int b)->int
+fn add(int a , int b)->int
 {
     int c=10;
 	int d=a*b;

@@ -13,7 +13,7 @@ SyntaxNode* SyntaxParser::BeginParse()
 	++_tokenIndex;
 	SyntaxNode* resultAST = parseProgram();
 	if (currToken().value().type() != _EOF)
-		throw runtime_error(currToken().value().toString() + "语法错误,程序未正常结束>");
+		throw runtime_error(currToken().value().toString() + "语法错误,程序未正常结束");
 	else
 		return resultAST;
 }
@@ -21,10 +21,8 @@ SyntaxNode* SyntaxParser::BeginParse()
 SyntaxNode* SyntaxParser::parseProgram()
 {
 	ProgramNode* pn = new ProgramNode();
-	//全局数组声明。
-
 	while (currToken().value().type() != _EOF)
-	{
+	{	
 		if (currToken().value().type() == _KW)
 			pn->addArray(solveArrDeclare());
 		else
