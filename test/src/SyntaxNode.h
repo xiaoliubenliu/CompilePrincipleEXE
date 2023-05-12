@@ -23,6 +23,9 @@ namespace Node
 	class ProgramNode :public SyntaxNode //如果没有public那么父类的方法会直接被private
 	{
 	public:
+		vector<SyntaxNode*> funvec;
+		vector<SyntaxNode*> arrayvec;
+	public:
 		void addFunc(SyntaxNode* fun)
 		{
 			this->funvec.push_back(fun);
@@ -51,13 +54,14 @@ namespace Node
 		}
 
 		string toString() { return "Global"; };
-	private:
-		vector<SyntaxNode*> funvec;
-		vector<SyntaxNode*> arrayvec;
+		vector<SyntaxNode*>& getFunvec() { return funvec; }
+		vector<SyntaxNode*>& getArrayvec() { return arrayvec; }
+
 	};
 
 	class FunctionNode :public SyntaxNode
 	{
+	public:
 		Token funName;
 		vector<SyntaxNode*> paramList;
 		SyntaxNode* retNode;
@@ -101,6 +105,7 @@ namespace Node
 
 	class ArrayDeclareNode :public SyntaxNode
 	{
+	public:
 		Token kw;
 		Token id;
 		long length;
@@ -120,6 +125,7 @@ namespace Node
 
 	class DeclareNode :public SyntaxNode
 	{
+	public:
 		Token kw;
 		Token id;
 	public:
@@ -139,6 +145,7 @@ namespace Node
 
 	class ExprListNode :public SyntaxNode
 	{
+	public:
 		vector<SyntaxNode* > exprVec;
 		SyntaxNode* father;
 	public:
@@ -172,6 +179,7 @@ namespace Node
 
 	class retNode :public SyntaxNode
 	{
+	public:
 		Token _retType;
 	public:
 		retNode(Token retType) :_retType(retType)
@@ -191,6 +199,7 @@ namespace Node
 
 	class ReturnNode :public SyntaxNode 
 	{
+	public:
 		Token t;
 		SyntaxNode* expr;
 	public:
@@ -214,6 +223,7 @@ namespace Node
 
 	class BinaryOPNode :public SyntaxNode 
 	{
+	public:
 		Token t;
 		SyntaxNode* left;
 		SyntaxNode* right;
@@ -240,6 +250,7 @@ namespace Node
 
 	class StringNode :public SyntaxNode 
 	{
+	public:
 		Token t;
 	public:
 		StringNode(Token t) :t(t)
@@ -258,6 +269,7 @@ namespace Node
 
 	class BoolNode :public SyntaxNode
 	{
+	public:
 		 Token t;
 	public:
 		 BoolNode(Token t) :t(t)
@@ -275,6 +287,7 @@ namespace Node
 
 	class NumberNode :public SyntaxNode
 	{
+	public:
 		Token t;
 	public:
 		NumberNode(Token t):t(t)
@@ -324,20 +337,21 @@ namespace Node
 
 
 	class WhileNode :public SyntaxNode {
+	public:
 		SyntaxNode* logicExpr;
 		SyntaxNode* whileExpr;
 	public:
-		WhileNode(SyntaxNode* logicExpr, SyntaxNode* whileExpr) {
-			logicExpr = logicExpr;
-			whileExpr = whileExpr;
+		WhileNode(SyntaxNode* logicExpr, SyntaxNode* whileExpr):logicExpr(logicExpr),whileExpr(whileExpr) {
 		}
 
 		void print(int width) override
 		{
 			cout << setw(width) << "" << toString() << endl;
 			cout << setw(width) << "" << "{" << endl;
-			logicExpr->print(width + 4);
-			whileExpr->print(width + 4);
+			if(logicExpr!=nullptr)
+				logicExpr->print(width + 4);
+			if(whileExpr !=nullptr)
+				whileExpr->print(width + 4);
 			cout << setw(width) << "" << "}" << endl;
 		}
 		string toString() {
@@ -346,6 +360,7 @@ namespace Node
 	};
 
 	class IfElseNode:public SyntaxNode {
+	public:
 		SyntaxNode* logicExpr;
 		SyntaxNode* ifExpr;
 		SyntaxNode* elseExpr;
@@ -365,7 +380,8 @@ namespace Node
 			cout << setw(width) << "" << "{" << endl;
 			logicExpr->print(width + 4);
 			ifExpr->print(width + 4);
-			elseExpr->print(width + 4);
+			if(elseExpr!=nullptr)
+				elseExpr->print(width + 4);
 			cout << setw(width) << "" << "}" << endl;
 		}
 
@@ -375,10 +391,10 @@ namespace Node
 	};
 
 	class PrintNode :public SyntaxNode {
+	public:
 		SyntaxNode* exprForPrint;
 	public:
-		PrintNode(SyntaxNode* exprForPrint) {
-			exprForPrint = exprForPrint;
+		PrintNode(SyntaxNode* exprForPrint):exprForPrint(exprForPrint) {
 		}
 
 		void print(int width) override
@@ -394,6 +410,7 @@ namespace Node
 	};
 
 	class AssignNode :public SyntaxNode {
+	public:
 		SyntaxNode* left;
 		SyntaxNode* right;
 	public:
@@ -416,6 +433,7 @@ namespace Node
 
 	class VariableNode :public SyntaxNode
 	{
+	public:
 		Token id;
 	public:
 		VariableNode(Token t) :id(t) {
@@ -425,16 +443,17 @@ namespace Node
 		{
 			cout << setw(width) << "" << toString() << endl;
 		}
+
 		string toString() {
 			return "VariableNode " + id.toString() ;
 		}
 	};
 
 	class ArrayAssignNode :public SyntaxNode {
+	public:
 		Token id;
 		SyntaxNode* index;
 		SyntaxNode* value;
-
 	public:
 		ArrayAssignNode(Token id, SyntaxNode* index, SyntaxNode* value)
 			:id(id), index(index), value(value)
@@ -455,6 +474,7 @@ namespace Node
 	};
 
 	class CallNode :public SyntaxNode {
+	public:
 		Token funName;
 		vector<SyntaxNode*> params;
 	public:
@@ -482,6 +502,7 @@ namespace Node
 	};
 
 	class DeclareMULNode :public SyntaxNode {
+	public:
 		Token kw;
 		vector<SyntaxNode*> assignList;
 	public:
@@ -510,6 +531,7 @@ namespace Node
 	};
 
 	class ArrayValueNode :public SyntaxNode {
+	public:
 		Token id;
 		SyntaxNode* index;
 	public:
@@ -528,6 +550,7 @@ namespace Node
 	};
 
 	class ReadNode :public SyntaxNode {
+	public:
 		ReadNodeType rnt;
 	public:
 		ReadNode(ReadNodeType rnt) :rnt(rnt) {
@@ -544,9 +567,9 @@ namespace Node
 	};
 
 	class UnaryOPNode :public SyntaxNode {
+	public:
 		Token t;
 		SyntaxNode* right;
-
 	public:
 		UnaryOPNode(Token t, SyntaxNode* right) :right(right), t(t) {
 		}

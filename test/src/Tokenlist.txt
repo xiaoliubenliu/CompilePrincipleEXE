@@ -1,1 +1,0 @@
-fn   id:begin   (   kw:int   id:a   kw:int   id:b   )   return   kw:int   {   return   id:a   ;   }   EOF

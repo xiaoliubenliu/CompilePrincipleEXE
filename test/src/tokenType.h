@@ -14,7 +14,7 @@ static enum ETokenType {
 	_WHILE,
 	_BREAK,
 
-	//加减乘除与或非
+	//加减乘除与或非 模 乘方
 	_PLUS,
 	_MINUS,
 	_MUL,
@@ -100,4 +100,12 @@ static enum ReadNodeType
 	READSTRING,
 	READBOOL
 };
+static enum VariableType
+{
+	INT,
+	FLOAT,
+	STRING,
+	BOOL
+};
+
 #endif

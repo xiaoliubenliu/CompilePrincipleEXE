@@ -31,6 +31,7 @@ SyntaxNode* SyntaxParser::parseProgram()
 	return pn;
 }
 
+//数组声明
 SyntaxNode* SyntaxParser::solveArrDeclare()
 {
 	Token kw = currToken().value();
@@ -54,6 +55,7 @@ SyntaxNode* SyntaxParser::solveArrDeclare()
 					throw runtime_error(currToken().value().toString() + "需要']'");
 				else {
 					++_tokenIndex;
+					judgeDL();
 					return new ArrayDeclareNode(kw, id, length);
 				}
 			}
@@ -144,9 +146,9 @@ SyntaxNode* SyntaxParser::solveDeclare()
 	}
 	else
 		throw runtime_error(curr.toString() + "语法错误");
-
 }
 
+//解析中括号内函数体，添加到functionnode中
 SyntaxNode* SyntaxParser::solveCodeBlock(SyntaxNode* functionNode)
 {
 	Token curr = currToken().value();
@@ -155,6 +157,7 @@ SyntaxNode* SyntaxParser::solveCodeBlock(SyntaxNode* functionNode)
 		++_tokenIndex;
 		SyntaxNode* blockExprList = solveExprList(functionNode);
 		curr = currToken().value();
+
 		if (curr.type() != _RCB)
 			throw runtime_error(curr.toString() + "需要'}' 结束语句语句块");
 		else 
@@ -166,11 +169,12 @@ SyntaxNode* SyntaxParser::solveCodeBlock(SyntaxNode* functionNode)
 	else 
 		throw runtime_error(currToken().value().toString() + "需要'{'");
 }
-
+//解析函数体内每一行代码
 SyntaxNode* SyntaxParser::solveExprList(SyntaxNode* functionNode)
 {
 	ExprListNode* eln = new ExprListNode(functionNode);
 
+	//解析函数内所有的代码。
 	while (currToken().value().type() != _EOF)
 	{
 		SyntaxNode* expr = parseExpr(functionNode);
@@ -179,16 +183,15 @@ SyntaxNode* SyntaxParser::solveExprList(SyntaxNode* functionNode)
 
 		eln->add(expr);
 	}
-
 	return eln;
 }
-
 
 
 inline void SyntaxParser::judgeDL()
 {
 	if (currToken().value().type() != _DL)
-		throw runtime_error("缺少';'");
+		Error::AddError(currToken().value().toString()+"缺少';'");
+	else 
 	++_tokenIndex;
 }
 
@@ -209,7 +212,8 @@ SyntaxNode* SyntaxParser::parseExpr(SyntaxNode* functionNode)
 		judgeDL();
 		return new ReturnNode(curr, expr);
 	}
-	else if (curr.type() == _CONTINUE) {
+	else if (curr.type() == _CONTINUE)
+	{
 		++_tokenIndex;
 		judgeDL();
 		return new ContinueNode(curr);
@@ -219,23 +223,25 @@ SyntaxNode* SyntaxParser::parseExpr(SyntaxNode* functionNode)
 		judgeDL();
 		return new BreakNode(curr);
 	}
-	else {
+	else 
+	{
 		SyntaxNode* indexExpr;
 		if (curr.type() == _WHILE) {
 			++_tokenIndex;
 			expr = parseArithORStrORBoolExpr();
-			judgeDL();
 			indexExpr = parseBlock(nullptr);
-			return new WhileNode(expr, indexExpr);
+			auto whilenode = new WhileNode(expr, indexExpr);
+			return whilenode;
 		}
-		else {
+		else 
+		{
 			SyntaxNode* idEQexpr;
 			SyntaxNode* valueExpr;
-			if (curr.type() == _IF) {
+			if (curr.type() == _IF) 
+			{
 				Token var = curr;
 				++_tokenIndex;
 				indexExpr = parseArithORStrORBoolExpr();
-				judgeDL();
 				valueExpr = parseBlock(nullptr);
 				curr = currToken().value();
 				if (curr.type() == _ELSE) {
@@ -243,31 +249,33 @@ SyntaxNode* SyntaxParser::parseExpr(SyntaxNode* functionNode)
 					idEQexpr = parseBlock(nullptr);
 					return new IfElseNode(indexExpr, valueExpr, idEQexpr, var);
 				}
-				else {
+				else 
 					return new IfElseNode(indexExpr, valueExpr, nullptr, var);
-				}
 			}
-			else if (curr.type() == _PRINT) {
+			else if (curr.type() == _PRINT) 
+			{
 				++_tokenIndex;
 				curr = currToken().value();
 				if (curr.type() != _LPAREN) {
 					throw runtime_error( currToken().value().toString()+ "需要左括号");
 				}
-				else {
+				else 
+				{
 					++_tokenIndex;
 					expr = parseArithORStrORBoolExpr();
-					judgeDL();
 					curr = currToken().value();
 					if (curr.type() != _RPAREN) {
 						throw runtime_error(currToken().value().toString() + "需要右括号");
 					}
 					else {
 						++_tokenIndex;
+						judgeDL();
 						return new PrintNode(expr);
 					}
 				}
 			}
-			else if (curr.type() == _ID) {
+			else if (curr.type() == _ID) 
+			{
 				Token var = curr;
 				++_tokenIndex;
 				curr = currToken().value();
@@ -280,7 +288,6 @@ SyntaxNode* SyntaxParser::parseExpr(SyntaxNode* functionNode)
 				else if (curr.type() == _LSB) {
 					++_tokenIndex;
 					indexExpr = parseArithORStrORBoolExpr();
-					judgeDL();
 					if (curr.type() == _RSB) {
 						throw runtime_error(currToken().value().toString()+"缺少']'" );
 					}
@@ -289,7 +296,8 @@ SyntaxNode* SyntaxParser::parseExpr(SyntaxNode* functionNode)
 						if (curr.type() == _ASSIGN) {
 							throw runtime_error( currToken().value().toString() + "缺少'='");
 						}
-						else {
+						else 
+						{
 							++_tokenIndex;
 
 							try {
@@ -297,46 +305,58 @@ SyntaxNode* SyntaxParser::parseExpr(SyntaxNode* functionNode)
 								judgeDL();
 								return new ArrayAssignNode(var, indexExpr, valueExpr);
 							}
-							catch (exception var5) {
+							catch (exception e) {
 								throw runtime_error(var.toString()+"语法错误");
 							}
 						}
 					}
 				}
 				else if (curr.type() == _LPAREN) {
-					return parseCall(var);
+					auto t = parseCall(var);;
+					judgeDL();
+					return t;
 				}
 				else {
 					throw runtime_error(currToken().value().toString()+"语法错误");
 				}
 			}
-			else if (curr.type() != _KW) {
-				return nullptr;
-			}
-			else {
+
+			else if(curr.type() == _KW) {
 				++_tokenIndex;
 				DeclareMULNode* dmn = new DeclareMULNode(curr);
 
-				while (currToken().value().type() == _ID) {
+				if(curr = currToken().value(),curr.type() == _ID) {
+					//持续添加变量。
 					if (seeSpecToken(_tokenIndex + 1).value().type() == _ASSIGN) {
 						Token var = currToken().value();
 						++_tokenIndex;
 						idEQexpr = parseSimpleAssign(var);
 						dmn->add(idEQexpr);
 					}
-					else {
-						Token var = currToken().value();
+					else if (seeSpecToken(_tokenIndex + 1).value().type() == _LPAREN)
+					{
 						++_tokenIndex;
+						curr = currToken().value();
+						parseCall(curr);
+						judgeDL();
+					}
+					else
+					{
+						Token var = currToken().value();
 						dmn->add(new VariableNode(var));
 					}
 
-					if (currToken().value().type() == _DL) {
+					/*if (currToken().value().type() == _DL) {
 						++_tokenIndex;
 						break;
-					}
+					}*/
 				}
 
 				return dmn;
+			}
+			else
+			{
+				return nullptr;
 			}
 		}
 	}
@@ -439,7 +459,6 @@ SyntaxNode* SyntaxParser::parseAtom()
 			if (curr.type() == _LPAREN) {
 				++_tokenIndex;
 				SyntaxNode* expr = parseArithORStrORBoolExpr();
-				judgeDL();
 				Token newCurr = currToken().value();
 				if (newCurr.type() == _RPAREN) {
 					++_tokenIndex;
@@ -458,7 +477,6 @@ SyntaxNode* SyntaxParser::parseAtom()
 				else if (newCurr.type() == _LSB) {
 					++_tokenIndex;
 					SyntaxNode* exprIndex = parseArithORStrORBoolExpr();
-					judgeDL();
 					if (currToken().value().type() != _RSB) {
 						throw runtime_error( currToken().value().toString() + "需要右括号']'");
 					}
@@ -556,8 +574,14 @@ SyntaxNode* SyntaxParser::parseBlock(SyntaxNode* father)
 		++_tokenIndex;
 		SyntaxNode* blockExprList = solveExprList(father);
 		curr = currToken().value();
-		if (curr.type() != _RCB) {
-			throw runtime_error(currToken().value().toString()+"需要'}' 语句块应该结束");
+		if (curr.type() == _DL)
+		{
+			++_tokenIndex;
+			curr = currToken().value();
+		}
+		if (curr.type() != _RCB) 
+		{
+			throw runtime_error(currToken().value().toString()+"需要'}'");
 		}
 		else {
 			++_tokenIndex;
@@ -577,6 +601,7 @@ SyntaxNode* SyntaxParser::parseSimpleAssign(Token var)
 	return new AssignNode(new VariableNode(var), expr);
 }
 
+//解析函数执行代码
 SyntaxNode* SyntaxParser::parseCall(Token var)
 {
 	++_tokenIndex;
@@ -585,7 +610,6 @@ SyntaxNode* SyntaxParser::parseCall(Token var)
 	CallNode* cn;
 	for (cn = new CallNode(var); curr.type() != _RPAREN; curr = currToken().value()) {
 		SyntaxNode* exprParam = parseArithORStrORBoolExpr();
-		judgeDL();
 		cn->addParam(exprParam);
 	}
 
