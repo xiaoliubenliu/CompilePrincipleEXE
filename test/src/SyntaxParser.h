@@ -6,6 +6,7 @@
 #include "tokenType.h"
 #include <vector>
 #include <iostream>
+#include "Error.h"
 using namespace Node;
 
 class SyntaxParser

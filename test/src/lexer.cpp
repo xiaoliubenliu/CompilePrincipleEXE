@@ -204,7 +204,7 @@ void Lexer::solveCurrLine()
 				//不是字符和内置token
 				if (getCurrChar() != '"')
 				{
-					if (getCurrChar() != ' ' && getCurrChar() != '\t') {
+					if (getCurrChar() != ' ' && getCurrChar() != '\t'&&getCurrChar()!=',') {
 						Error::AddError(error(string("无效的字符:")+getCurrChar().value()));
 						++_currCharPos;
 					}

@@ -32,6 +32,15 @@
     <ClCompile Include="src\SyntaxParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\interPreterUtill.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Interpreter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\runresult.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Error.h">
@@ -52,8 +61,17 @@
     <ClInclude Include="src\SyntaxNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\interPreterUtill.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\runresult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Interpreter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\Tokenlist.txt" />
+    <Text Include="src\Text.txt" />
   </ItemGroup>
 </Project>
