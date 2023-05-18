@@ -9,14 +9,12 @@ using namespace std;
 
 namespace Node
 {
-	static std::ofstream outfile("output.txt",ios::app);
-
 	class SyntaxNode
 	{
 	public:
 		SyntaxNode() {}
 		virtual string toString() { return "SyntaxNode"; }
-		virtual void print(int width=0) { cout <<setw(width)<<" "<< "rootNode" << ""; }
+		virtual void print(int width=0,ostream& out = std::cout) { out <<setw(width)<<" "<< "rootNode" << ""; }
 		virtual ~SyntaxNode() {}
 	};
 
@@ -36,21 +34,21 @@ namespace Node
 			this->arrayvec.push_back(arr);
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << " "<< toString()<<"::" << endl;
-			cout << setw(width) <<"" << "{" << endl;
+			out << setw(width) << " "<< toString()<<"::" << endl;
+			out << setw(width) <<"" << "{" << endl;
 			for (auto& item : funvec)
 			{
 				if (item != nullptr)
-					item->print(width+4);
+					item->print(width+4,out);
 			}
 			for (auto& item : arrayvec)
 			{
 				if (item != nullptr)
-					item->print(width + 4);
+					item->print(width + 4,out);
 			}
-			cout << setw(width) << " "<<"}" << endl;
+			out << setw(width) << " "<<"}" << endl;
 		}
 
 		string toString() { return "Global"; };
@@ -83,19 +81,19 @@ namespace Node
 			this->retNode = retNode;
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << " " << toString() << endl;
-			cout << setw(width) << " " << "{" << endl;
+			out << setw(width) << " " << toString() << endl;
+			out << setw(width) << " " << "{" << endl;
 
 			for (auto& item : paramList)
 			{
 				if (item != nullptr)
-					item->print(width + 4);
+					item->print(width + 4,out);
 			}
-			retNode->print(width + 4);
-			funBody->print(width + 4);
-			cout << setw(width) << " " << "}" << endl;
+			retNode->print(width + 4,out);
+			funBody->print(width + 4,out);
+			out << setw(width) << " " << "}" << endl;
 		}
 
 		string toString() {
@@ -113,9 +111,9 @@ namespace Node
 		ArrayDeclareNode(Token kw, Token id, long length) :kw(kw), id(id), length(length) {
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
+			out << setw(width) << "" << toString() << endl;
 		}
 
 		string toString() {
@@ -133,9 +131,9 @@ namespace Node
 		{
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" <<toString() << endl;
+			out << setw(width) << "" <<toString() << endl;
 		}
 
 		string toString() {
@@ -158,18 +156,18 @@ namespace Node
 			exprVec.push_back(node);
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width)<<"" << toString() << endl;
-			cout << setw(width)<<"" << "{" << endl;
+			out << setw(width)<<"" << toString() << endl;
+			out << setw(width)<<"" << "{" << endl;
 			for (auto& item : exprVec)
 			{
 				if (item != nullptr)
 				{
-					item->print(width+4);
+					item->print(width+4 ,out);
 				}
 			}
-			cout << setw(width) << "" << "}" << endl;
+			out << setw(width) << "" << "}" << endl;
 		}
 
 		string toString() {
@@ -186,9 +184,9 @@ namespace Node
 		{
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << " " <<"return:" << toString() << endl;
+			out << setw(width) << " " <<"return:" << toString() << endl;
 		}
 
 		string toString() override
@@ -207,13 +205,13 @@ namespace Node
 		{
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
-			cout << setw(width) << "{" << endl;
+			out << setw(width) << "" << toString() << endl;
+			out << setw(width) << "{" << endl;
 			if (expr != nullptr)
-				expr->print(width+4);
-			cout << setw(width) << "}" << endl;
+				expr->print(width+4,out);
+			out << setw(width) << "}" << endl;
 		}
 
 		string toString() {
@@ -228,15 +226,15 @@ namespace Node
 		SyntaxNode* left;
 		SyntaxNode* right;
 	public:
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
-			cout << setw(width) << "{" << endl;
+			out << setw(width) << "" << toString() << endl;
+			out << setw(width) << "{" << endl;
 			if (left != nullptr)
-				left->print(width + 4);
+				left->print(width + 4,out);
 			if (right != nullptr)
-				right->print(width + 4);
-			cout << setw(width) << "}" << endl;
+				right->print(width + 4,out);
+			out << setw(width) << "}" << endl;
 		}
 
 		BinaryOPNode(SyntaxNode* left, Token t, SyntaxNode* right) :left(left), right(right), t(t)
@@ -257,9 +255,9 @@ namespace Node
 		{
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
+			out << setw(width) << "" << toString() << endl;
 		}
 
 		string toString() {
@@ -276,9 +274,9 @@ namespace Node
 		 {
 		 }
 
-		 void print(int width) override
+		 void print(int width=0,ostream& out = std::cout) override
 		 {
-			 cout << setw(width) << "" << toString() << endl;
+			 out << setw(width) << "" << toString() << endl;
 		 }
 		 string toString() {
 			return "BoolNode " + t.toString() ;
@@ -294,9 +292,9 @@ namespace Node
 		{
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
+			out << setw(width) << "" << toString() << endl;
 		}
 		string toString() {
 			return "NumberNode " + t.toString() ;
@@ -310,9 +308,9 @@ namespace Node
 		 ContinueNode(Token t):t(t) {
 		}
 
-		 void print(int width) override
+		 void print(int width=0,ostream& out = std::cout) override
 		 {
-			 cout << setw(width) << "" << toString() << endl;
+			 out << setw(width) << "" << toString() << endl;
 		 }
 		string toString() {
 			return "ContinueNode " + t.toString() ;
@@ -326,9 +324,9 @@ namespace Node
 		{
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
+			out << setw(width) << "" << toString() << endl;
 		}
 		string toString() {
 			return "BreakNode " + t.toString() ;
@@ -344,15 +342,15 @@ namespace Node
 		WhileNode(SyntaxNode* logicExpr, SyntaxNode* whileExpr):logicExpr(logicExpr),whileExpr(whileExpr) {
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
-			cout << setw(width) << "" << "{" << endl;
+			out << setw(width) << "" << toString() << endl;
+			out << setw(width) << "" << "{" << endl;
 			if(logicExpr!=nullptr)
-				logicExpr->print(width + 4);
+				logicExpr->print(width + 4,out);
 			if(whileExpr !=nullptr)
-				whileExpr->print(width + 4);
-			cout << setw(width) << "" << "}" << endl;
+				whileExpr->print(width + 4,out);
+			out << setw(width) << "" << "}" << endl;
 		}
 		string toString() {
 			return "whileNode ";
@@ -374,15 +372,15 @@ namespace Node
 		{
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
-			cout << setw(width) << "" << "{" << endl;
-			logicExpr->print(width + 4);
-			ifExpr->print(width + 4);
+			out << setw(width) << "" << toString() << endl;
+			out << setw(width) << "" << "{" << endl;
+			logicExpr->print(width + 4,out);
+			ifExpr->print(width + 4,out);
 			if(elseExpr!=nullptr)
-				elseExpr->print(width + 4);
-			cout << setw(width) << "" << "}" << endl;
+				elseExpr->print(width + 4,out);
+			out << setw(width) << "" << "}" << endl;
 		}
 
 		string toString() {
@@ -397,12 +395,12 @@ namespace Node
 		PrintNode(SyntaxNode* exprForPrint):exprForPrint(exprForPrint) {
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
-			cout << setw(width) << "" << "{" << endl;
-			exprForPrint->print(width+4);
-			cout << setw(width) << "" << "}" << endl;
+			out << setw(width) << "" << toString() << endl;
+			out << setw(width) << "" << "{" << endl;
+			exprForPrint->print(width+4 ,out);
+			out << setw(width) << "" << "}" << endl;
 		}
 		string toString() {
 			return "´òÓ¡ " + exprForPrint->toString() ;
@@ -418,13 +416,13 @@ namespace Node
 		{
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
-			cout << setw(width) << "" << "{" << endl;
-			left->print(width + 4);
-			right->print(width + 4);
-			cout << setw(width) << "" << "}" << endl;
+			out << setw(width) << "" << toString() << endl;
+			out << setw(width) << "" << "{" << endl;
+			left->print(width + 4,out);
+			right->print(width + 4,out);
+			out << setw(width) << "" << "}" << endl;
 		}
 		string toString() {
 			return "AssignNode " + left->toString() + "=" + right->toString() ;
@@ -439,9 +437,9 @@ namespace Node
 		VariableNode(Token t) :id(t) {
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
+			out << setw(width) << "" << toString() << endl;
 		}
 
 		string toString() {
@@ -460,13 +458,13 @@ namespace Node
 		{
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
-			cout << setw(width) << "" << "{" << endl;
-			index->print(width + 4);
-			value->print(width + 4);
-			cout << setw(width) << "" << "}" << endl;
+			out << setw(width) << "" << toString() << endl;
+			out << setw(width) << "" << "{" << endl;
+			index->print(width + 4,out);
+			value->print(width + 4,out);
+			out << setw(width) << "" << "}" << endl;
 		}
 		string toString() {
 			return "ArrayAssignNode " + id.toString() ;
@@ -485,16 +483,16 @@ namespace Node
 			params.push_back(param);
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
-			cout << setw(width) << "" << "{" << endl;
+			out << setw(width) << "" << toString() << endl;
+			out << setw(width) << "" << "{" << endl;
 			for (auto& item : params)
 			{
 				if (item != nullptr)
-					item->print(width + 4);
+					item->print(width + 4,out);
 			}
-			cout << setw(width) << "" << "}" << endl;
+			out << setw(width) << "" << "}" << endl;
 		}
 		string toString() {
 			return "CallNode " + funName.toString() + " " ;
@@ -513,16 +511,16 @@ namespace Node
 			return "DeclareMULNode " + kw.toString() ;
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
-			cout << setw(width) << "" << "{" << endl;
+			out << setw(width) << "" << toString() << endl;
+			out << setw(width) << "" << "{" << endl;
 			for (auto& item : assignList)
 			{
 				if (item != nullptr)
-					item->print(width + 4);
+					item->print(width + 4,out);
 			}
-			cout << setw(width) << "" << "}" << endl;
+			out << setw(width) << "" << "}" << endl;
 		}
 		void add(SyntaxNode* node)
 		{
@@ -539,10 +537,10 @@ namespace Node
 		}
 
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
-			index->print(width + 4);
+			out << setw(width) << "" << toString() << endl;
+			index->print(width + 4,out);
 		}
 		string toString() {
 			return "ArrayValueNode " + id.toString() ;
@@ -556,9 +554,9 @@ namespace Node
 		ReadNode(ReadNodeType rnt) :rnt(rnt) {
 		}
 
-		void print(int width) override
+		void print(int width=0,ostream& out = std::cout) override
 		{
-			cout << setw(width) << "" << toString() << endl;
+			out << setw(width) << "" << toString() << endl;
 		}
 		string toString()override
 		{
