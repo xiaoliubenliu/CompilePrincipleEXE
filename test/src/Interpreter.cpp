@@ -50,6 +50,12 @@ void Interpreter::runAST(ProgramNode* root)
     }
     else 
     {
+        if (Error::getError().size() != 0)
+        {
+            cout << Error::PrintError();
+            throw runtime_error("runtime:´æÔÚ´íÎó,³ÌÐòÖÕÖ¹¡£");
+        }
+
         //main º¯ÊýÕ»¡£
         SingleRunStack* currRS = new SingleRunStack(SingleRunStackType::FUN);
         runStack.push(currRS);
@@ -260,12 +266,7 @@ RunResult* Interpreter::traversalASTForRun(SyntaxNode* root, SingleRunStackType 
 
 RunResult* Interpreter::callFun(CallNode* root)
 {
-    if (Error::getError().size() != 0)
-    {
-        cout << Error::PrintError();
-        throw runtime_error("runtime:´æÔÚ´íÎó,³ÌÐòÖÕÖ¹¡£");
-    }
-
+   
     CallNode* cn = root;
     auto funstr = trim(root->funName.value().value());
     if (!funMap.count(funstr)) 

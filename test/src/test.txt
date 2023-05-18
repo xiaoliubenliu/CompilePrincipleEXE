@@ -4,7 +4,7 @@ fn main()->void
 {
     globalArr[9]=10;   //数组赋值
     
-    print("______加减乘除 模 乘方__________" +\n);
+    print("______加减乘除 模 乘方__________" +"\n");
     print("1+1="+(1+1) +"\n");     //打印表达式
     print("100-80="+(100-80) +"\n");
     print("2*3="+(2*3) +"\n");
@@ -12,23 +12,27 @@ fn main()->void
     print("3的3次方"+3**3 +"\n");
     print("40%30="+40%30 +"\n");
 
-    //与或非
+    print("______与或非__________" +"\n");
     bool bool_t=true;
     bool bool_f=false;
     print("与运算:"+(bool_t & bool_f)  +"\n");
     print("或运算:"+(bool_t | bool_f)  +"\n");
     print("非运算:"+(!bool_t)  +"\n");
 
-    //函数调用
+    print("______函数调用__________" +"\n");
     print("add函数计算1+2="+add(1,2) +"\n");    
-    
+    print("4的阶乘:" + factorial(4)  +"\n");
+
     int localv=10;               //声明局部变量
     print("局部变量：localv->"+localv +"\n");
-
     string str="Hello World";
-  
     print("局部变量：str->"+str +"\n");
-  
+
+    print("______比较__________" +"\n");
+    print("比较1.2>=2.1?结果："+(1.2>=2.1)+"\n");
+    print("比较abc>abd?结果："+("abc">="abd") +"\n");
+
+    print("______if else__________" +"\n");
     if(globalArr[9]!=10)           //if else
     {  print("true" +"\n"); }
     else
@@ -37,25 +41,31 @@ fn main()->void
         { print("inside true"  +"\n"); }
     }
   
-    bool bool_test=true;   //bool
-    print("局部变量: bool_test：->"+bool_test  +"\n");
-                                                        
-  
-   while(globalArr[1]<10)                  //while 
-   {
-     print(globalArr[1]  +"\n");
-     globalArr[1]=globalArr[1]+1;
-   }
-  
-   print("4的阶乘:" + factorial(4)  +"\n");
-     
-                                                        
+    print("______While，break，continue__________" +"\n");
+
+    while(true)                  //while 
+    {
+      if(globalArr[1]<5)
+      {
+         globalArr[1]=globalArr[1]+1;
+         continue;
+      }
+      print(globalArr[1]  +"\n");
+      globalArr[1]=globalArr[1]+1;
+      if(globalArr[1]>=10) 
+      { 
+        break;
+      }
+    }
+    
+    print("______读取int，string.....__________" +"\n");
     int getin=readInt();
     print("ReadInt:"+getin  +"\n");
                                                         
     string readstr=readString();
     print("ReadString:"+readstr  +"\n");
-       
+
+
 }
 
 
