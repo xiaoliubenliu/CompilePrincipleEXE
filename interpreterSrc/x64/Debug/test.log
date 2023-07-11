@@ -1,0 +1,32 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.Cpp.WindowsSDK.targets(46,5): error MSB8036: The Windows SDK version 10.0.20348.0 was not found. Install the required version of Windows SDK or change the SDK version in the project property pages or by right-clicking the solution and selecting "Retarget solution".
+
+Project Performance Summary:
+       11 ms  C:\Users\xiaoliu\Desktop\新建文件夹\CompilePrincipleIDE\test\test\test.vcxproj   1 calls
+                 11 ms  Build                                      1 calls
+
+Target Performance Summary:
+        0 ms  _PrepareForBuild                           1 calls
+        0 ms  BeforeResolveReferences                    1 calls
+        0 ms  _SplitProjectReferencesByFileExistence     1 calls
+        0 ms  _AddOutputPathToGlobalPropertiesToRemove   1 calls
+        0 ms  GetResolvedWinMD                           1 calls
+        0 ms  PrepareProjectReferences                   1 calls
+        0 ms  GetFrameworkPaths                          1 calls
+        0 ms  GetReferenceAssemblyPaths                  1 calls
+        1 ms  ResolveProjectReferences                   1 calls
+        1 ms  SetTelemetryEnvironmentVariables           1 calls
+        1 ms  _PrepareForReferenceResolution             1 calls
+        1 ms  SetBuildDefaultEnvironmentVariables        1 calls
+        1 ms  _CheckWindowsSDKInstalled                  1 calls
+        1 ms  AddExternalIncludDirectoriesToPaths        1 calls
+        1 ms  AssignProjectConfiguration                 1 calls
+        2 ms  _GetProjectReferenceTargetFrameworkProperties   1 calls
+        2 ms  _CheckForInvalidConfigurationAndPlatform   1 calls
+
+Task Performance Summary:
+        0 ms  MSBuild                                    1 calls
+        0 ms  SetRidAgnosticValueForProjects             1 calls
+        0 ms  VCMessage                                  1 calls
+        1 ms  Message                                    2 calls
+        1 ms  AssignProjectConfiguration                 1 calls
+        2 ms  SetEnv                                     8 calls
