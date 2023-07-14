@@ -30,4 +30,4 @@ code.txt需要GB2312编码，否则exe执行会出现乱码情况
 
 使用vscode执行效果如下
 
-![](readmePic/uTools_1689051005837.png)
+![image](readmePic/uTools_1689051005837.png)
