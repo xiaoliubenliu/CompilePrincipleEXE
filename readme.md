@@ -26,8 +26,8 @@ code.txt需要GB2312编码，否则exe执行会出现乱码情况
 - -l -p 选项打印lexer 和 syntaxparser 生成的token 和 语法树
 - -o 指定打印的输出文件
 
-例：`toyPL.exe code.txt -l -p -o output.txt`
+例：`toyPL.exe code.txt -l -p -o output.txtraw`
 
 使用vscode执行效果如下
 
-![uTools_1689051005837](C:\Users\xiaoliu\Desktop\Interpreter\interpreter\readmePic\uTools_1689051005837.png)
+![](readmePic/uTools_1689051005837.png)
