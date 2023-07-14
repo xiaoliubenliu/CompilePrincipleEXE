@@ -30,4 +30,4 @@ code.txt需要GB2312编码，否则exe执行会出现乱码情况
 
 使用vscode执行效果如下
 
-![uTools_1689051005837](C:\Users\xiaoliu\Desktop\Interpreter\interpreter\readmePic\uTools_1689051005837.png)
+![uTools_1689051005837](https://github.com/xiaoliubenliu/interpreter/raw/7b22a7a1e10154a6ec7c911da869a0d59fb916a4/readmePic/uTools_1689051005837.png)
